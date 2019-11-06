@@ -61,6 +61,7 @@ namespace HydrotestCentral.Model
     }
 
     // A Source of Quote Header Data from SQLite Database
+    /*
     public class QuoteHeaderDataProvider
     {
         private SQLiteDataAdapter quoteheader_adapter;
@@ -105,8 +106,10 @@ namespace HydrotestCentral.Model
             return specific_dt;
         }
     }
+    */
 
     // Source of Quote Items Data From SQLite Database
+    /*
     public class QuoteItemsDataProvider
     {
         private SQLiteDataAdapter quoteitems_adapter;
@@ -293,5 +296,5 @@ namespace HydrotestCentral.Model
 
         }
     }
-
+    */
 }
