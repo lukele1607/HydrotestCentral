@@ -17,13 +17,33 @@ namespace HydrotestCentral.ViewModels
 {
     public partial class MainWindowViewModel: INotifyPropertyChanged
     {
-        static string connectionString = @"Data Source=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db";
+        static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
         SQLiteConnection connection;
         SQLiteCommand cmd;
         SQLiteDataAdapter adapter;
         DataSet ds;
 
-        public ObservableCollection<QuoteHeader> quote_headers { get; set; }
+        private ObservableCollection<QuoteHeader> quote_header_data = null;
+
+        public ObservableCollection<QuoteHeader> quote_headers
+        {
+            get
+            {
+                if (quote_header_data != null)
+                {
+                    return quote_header_data;
+                }
+                return null;
+            }
+            set
+            {
+                if (quote_header_data != value)
+                {
+                    quote_header_data = value;
+                    OnPropertyChanged("quote_headers");
+                }
+            }
+        }
         public ObservableCollection<QuoteItem> quote_items { get; set; }
         public ObservableCollection<InventoryItem> inventory_items { get; set; }
 
@@ -44,7 +64,7 @@ namespace HydrotestCentral.ViewModels
 
             try
             {
-                connection = new SQLiteConnection(@"DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db");
+                connection = new SQLiteConnection(connectionString);
                 connection.Open();
                 cmd = connection.CreateCommand();
                 cmd.CommandText = string.Format("SELECT * FROM QTE_HDR");
@@ -110,7 +130,7 @@ namespace HydrotestCentral.ViewModels
 
             try
             {
-                connection = new SQLiteConnection(@"DataSource=C:\\Users\\SFWMD\\Aqua-Tech Hydro Services\\IT - Documents\\7.8 Databases\\CentralDB.db");
+                connection = new SQLiteConnection(connectionString);
                 connection.Open();
                 cmd = connection.CreateCommand();
                 cmd.CommandText = string.Format("SELECT * FROM QTE_ITEMS");
@@ -190,7 +210,7 @@ namespace HydrotestCentral.ViewModels
             try
             {
                 var start_collection = new ObservableCollection<QuoteItem>();
-                connection = new SQLiteConnection(@"DataSource=C:\\SQLite\\CentralDB.db");
+                connection = new SQLiteConnection(connectionString);
                 connection.Open();
                 cmd = connection.CreateCommand();
                 cmd.CommandText = String.Format("DELETE FROM QTE_ITEMS WHERE jobno=\"{0}\" AND tab_index = {1}", jobno, tab_index);
@@ -205,6 +225,32 @@ namespace HydrotestCentral.ViewModels
                 connection.Close();
                 connection.Dispose();
             }
+        }
+
+        public void DeleteHeaderItem(String jobno)
+        {
+            try
+            {
+                var start_collection = new ObservableCollection<QuoteItem>();
+                connection = new SQLiteConnection(connectionString);
+                connection.Open();
+                cmd = connection.CreateCommand();
+                cmd.CommandText = String.Format("DELETE FROM QTE_HDR WHERE jobno=\"{0}\"", jobno);
+                cmd.ExecuteNonQuery();
+
+                quote_headers = LoadQuoteHeaderData();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                connection.Close();
+                connection.Dispose();
+            }
+
         }
 
         public void updateQuoteItemsByJob(string jobno)

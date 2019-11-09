@@ -23,6 +23,7 @@ namespace HydrotestCentral
     {
         public SQLiteConnection connection;
         public SQLiteDataAdapter dataAdapter;
+        static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
 
         public NewQuoteWindow()
         {
@@ -38,7 +39,7 @@ namespace HydrotestCentral
 
         public string getLastJobNumber()
         {
-            connection = new SQLiteConnection("DataSource=C:\\CentralDB.db");
+            connection = new SQLiteConnection(connectionString);
             connection.Open();
             SQLiteCommand cmd = connection.CreateCommand();
             cmd.CommandText = string.Format("SELECT jobno FROM QTE_HDR ORDER BY jobno DESC LIMIT 1");
