@@ -17,11 +17,13 @@ namespace HydrotestCentral.ViewModels
 {
     public partial class MainWindowViewModel: INotifyPropertyChanged
     {
-        static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
+        //static string connectionString = Properties.Settings.Default.connString;
         SQLiteConnection connection;
         SQLiteCommand cmd;
         SQLiteDataAdapter adapter;
         DataSet ds;
+        string connection_String = System.Configuration.ConfigurationManager.ConnectionStrings["connection_String"].ConnectionString;
+
 
         private ObservableCollection<QuoteHeader> quote_header_data = null;
 
@@ -47,7 +49,6 @@ namespace HydrotestCentral.ViewModels
         public ObservableCollection<QuoteItem> quote_items { get; set; }
         public ObservableCollection<InventoryItem> inventory_items { get; set; }
 
-
         public MainWindowViewModel()
         {
             InitializeComponent();
@@ -64,7 +65,7 @@ namespace HydrotestCentral.ViewModels
 
             try
             {
-                connection = new SQLiteConnection(connectionString);
+                connection = new SQLiteConnection(connection_String);
                 connection.Open();
                 cmd = connection.CreateCommand();
                 cmd.CommandText = string.Format("SELECT * FROM QTE_HDR");
@@ -130,7 +131,7 @@ namespace HydrotestCentral.ViewModels
 
             try
             {
-                connection = new SQLiteConnection(connectionString);
+                connection = new SQLiteConnection(connection_String);
                 connection.Open();
                 cmd = connection.CreateCommand();
                 cmd.CommandText = string.Format("SELECT * FROM QTE_ITEMS");
@@ -210,7 +211,7 @@ namespace HydrotestCentral.ViewModels
             try
             {
                 var start_collection = new ObservableCollection<QuoteItem>();
-                connection = new SQLiteConnection(connectionString);
+                connection = new SQLiteConnection(connection_String);
                 connection.Open();
                 cmd = connection.CreateCommand();
                 cmd.CommandText = String.Format("DELETE FROM QTE_ITEMS WHERE jobno=\"{0}\" AND tab_index = {1}", jobno, tab_index);
@@ -232,7 +233,7 @@ namespace HydrotestCentral.ViewModels
             try
             {
                 var start_collection = new ObservableCollection<QuoteItem>();
-                connection = new SQLiteConnection(connectionString);
+                connection = new SQLiteConnection(connection_String);
                 connection.Open();
                 cmd = connection.CreateCommand();
                 cmd.CommandText = String.Format("DELETE FROM QTE_HDR WHERE jobno=\"{0}\"", jobno);
@@ -244,11 +245,6 @@ namespace HydrotestCentral.ViewModels
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
-            }
-            finally
-            {
-                connection.Close();
-                connection.Dispose();
             }
 
         }
