@@ -132,7 +132,7 @@
       <DependentUpon>QuoteItemGrid.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TextBoxAutoComplete.cs" />
-    <Compile Include="Infrastructure\NotificationClass.cs" />
+    <Compile Include="Infrastructure\PropertyChangedNotifier.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\QuoteRepository.cs" />
@@ -140,6 +140,8 @@
     <Compile Include="ViewModels\MainWindowViewModel.Designer.cs">
       <DependentUpon>MainWindowViewModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\QuoteItemsVM.cs" />
+    <Compile Include="ViewModels\QuoteItemVM.cs" />
     <Compile Include="Views\MainWindow.xaml.cs" />
     <Compile Include="Views\NewQuoteWindow.xaml.cs" />
     <Compile Include="App.xaml.cs">
@@ -155,6 +157,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\NewQuoteWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\QuoteItem\QuoteItemsDataTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

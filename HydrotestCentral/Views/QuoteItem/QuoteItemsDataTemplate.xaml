@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:viewmodel="clr-namespace:HydrotestCentral.ViewModels"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+    <DataTemplate DataType="{x:Type viewmodel:QuoteItemsVM}">
+        <DataGrid x:Name="QuoteItemsGrid" DataContext="{Binding}" ItemsSource="{Binding QuoteItems}" Margin="20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontFamily="Verdana"  ColumnWidth="150"  IsReadOnly="False" CanUserAddRows="false" IsManipulationEnabled="True" AreRowDetailsFrozen="True"
+                  SelectionMode="Single" SelectionUnit="FullRow" 
+AutoGenerateColumns="False" 
+                  SelectedItem="{Binding SelectedQuote, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="qty" Binding="{Binding Path=Qty}" />
+                <DataGridTextColumn Header="item" Binding="{Binding Path=Item, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False"/>
+
+                <DataGridTextColumn Header="rate" Binding="{Binding Path=Rate, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False"/>
+                <DataGridTextColumn Header="descr" Binding="{Binding Path=Descr, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False"/>
+
+                <DataGridTextColumn Header="group" Binding="{Binding Path=Group, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False"/>
+                <DataGridCheckBoxColumn Header="taxable" Binding="{Binding Path=Taxable, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False"/>
+                <DataGridCheckBoxColumn Header="discountable" Binding="{Binding Path=Discountable, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False"/>
+                <DataGridCheckBoxColumn Header="printable" Binding="{Binding Path=Printable, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False"/>
+                <DataGridTextColumn Header="tax_total" Binding="{Binding Path=TaxTotal}"/>
+                <DataGridTextColumn Header="line_total" Binding="{Binding Path=LineTotal}" FontSize="14" FontWeight="SemiBold" Width="200"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DataTemplate>
+</ResourceDictionary>

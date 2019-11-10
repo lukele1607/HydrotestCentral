@@ -15,7 +15,7 @@ using System.Windows;
 
 namespace HydrotestCentral.ViewModels
 {
-    public partial class MainWindowViewModel: INotifyPropertyChanged
+    public partial class MainWindowViewModel: PropertyChangedNotifier
     {
         //static string connectionString = Properties.Settings.Default.connString;
         SQLiteConnection connection;
@@ -46,7 +46,21 @@ namespace HydrotestCentral.ViewModels
                 }
             }
         }
-        public ObservableCollection<QuoteItem> quote_items { get; set; }
+
+        private QuoteItemsVM quoteItemsVM;
+        public QuoteItemsVM QuoteItemsVM
+        {
+            get => quoteItemsVM;
+            set
+            {
+                if (quoteItemsVM != value)
+                {
+                    quoteItemsVM = value;
+                    TriggerPropertyChangedEvent (nameof (QuoteItemsVM));
+                }
+            }
+        }
+        //public ObservableCollection<QuoteItem> quote_items { get; set; }
         public ObservableCollection<InventoryItem> inventory_items { get; set; }
 
         public MainWindowViewModel()
@@ -55,8 +69,10 @@ namespace HydrotestCentral.ViewModels
 
             quote_headers = new ObservableCollection<QuoteHeader>();
             quote_headers = LoadQuoteHeaderData();
-            quote_items = new ObservableCollection<QuoteItem>();
-            quote_items = LoadQuoteItemData();
+
+            var quoteItems = LoadQuoteItemData ();
+
+            QuoteItemsVM = new QuoteItemsVM (quoteItems.Select (x => new QuoteItemVM { Qty = x.qty, Item = x.item, Rate = x.rate, Descr = x.descr, Group = x.group, Taxable = x.taxable, Discountable = x.discountable, Printable = x.printable, LineTotal = x.line_total, TaxTotal = x.tax_total, JobNo = x.jobno, TabIndex = x.tab_index, RowIndex = x.row_index }));
         }
 
         public ObservableCollection<QuoteHeader> LoadQuoteHeaderData()
@@ -201,11 +217,6 @@ namespace HydrotestCentral.ViewModels
             return items;
         }
 
-        public ObservableCollection<QuoteItem> getQuoteItems()
-        {
-            return quote_items;
-        }
-
         public void DeleteQuoteItem(String jobno, int tab_index)
         {
             try
@@ -251,48 +262,17 @@ namespace HydrotestCentral.ViewModels
 
         public void updateQuoteItemsByJob(string jobno)
         {
-            //MessageBox.Show("updateQuoteItemsByJob called...");
-            var start_collection = new ObservableCollection<QuoteItem>();
-            var new_collection = new ObservableCollection<QuoteItem>();
-            start_collection = LoadQuoteItemData();
+            var quoteItems = LoadQuoteItemData ();
 
-            IEnumerable<QuoteItem> items = start_collection.Where(c => c.jobno == jobno);
-            Console.WriteLine("Adding New Collection for Quote Items updated to only show Job: " + jobno);
-            foreach (QuoteItem i in items)
-            {
-                new_collection.Add(i);
-                Console.WriteLine("--->" + i.jobno + " | " + i.item);
-            }
-
-            quote_items = new_collection;
+            QuoteItemsVM = new QuoteItemsVM (quoteItems.Where (x => x.jobno == jobno).Select (x => new QuoteItemVM { Qty = x.qty, Item = x.item, Rate = x.rate, Descr = x.descr, Group = x.group, Taxable = x.taxable, Discountable = x.discountable, Printable = x.printable, LineTotal = x.line_total, TaxTotal = x.tax_total, JobNo = x.jobno, TabIndex = x.tab_index, RowIndex = x.row_index }));
         }
 
-        public void updateQuoteItemsByJob_And_Tab(string jobno, int tab_index)
+        public void updateQuoteItemsByJob_And_Tab(string jobno, int tabIndex)
         {
-            var start_collection = new ObservableCollection<QuoteItem>();
-            var new_collection = new ObservableCollection<QuoteItem>();
-            start_collection = LoadQuoteItemData();
+            var quoteItems = LoadQuoteItemData ();
 
-            IEnumerable<QuoteItem> items = start_collection.Where(c => c.jobno == jobno && c.tab_index == tab_index);
-
-            foreach (QuoteItem i in items)
-            {
-                new_collection.Add(i);
-            }
-
-            quote_items = new_collection;
+            QuoteItemsVM = new QuoteItemsVM (quoteItems.Where (x => x.jobno == jobno && x.tab_index == tabIndex).Select (x => new QuoteItemVM { Qty = x.qty, Item = x.item, Rate = x.rate, Descr = x.descr, Group = x.group, Taxable = x.taxable, Discountable = x.discountable, Printable = x.printable, LineTotal = x.line_total, TaxTotal = x.tax_total, JobNo = x.jobno, TabIndex = x.tab_index, RowIndex = x.row_index }));
         }
 
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handle = PropertyChanged;
-            if(handle != null)
-            {
-                handle(this, new PropertyChangedEventArgs(propertyName));
-            }            
-        }
-        #endregion
     }
 }

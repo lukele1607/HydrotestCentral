@@ -39,12 +39,12 @@ namespace HydrotestCentral
             InitializeComponent();
             
             //this.DataContext = vm;
-            this.QItems.ItemsSource = vm.quote_items;
+            //this.QItems.ItemsSource = vm.quote_items;
 
-            foreach(QuoteItem x in vm.quote_items)
-            {
-                Console.WriteLine(x.item.ToString() + " IN VM.QUOTE_ITEMS");
-            }
+            //foreach(QuoteItem x in vm.quote_items)
+            //{
+            //    Console.WriteLine(x.item.ToString() + " IN VM.QUOTE_ITEMS");
+            //}
         }
 
         public QuoteItemGrid(string jobno_in, int tab_index_in)
